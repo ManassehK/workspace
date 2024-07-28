@@ -1,0 +1,106 @@
+#include <LiquidCrystal.h>
+
+// Pin definitions for the LCD
+const int rs = 7;
+const int en = 8;
+const int d4 = 9;
+const int d5 = 10;
+const int d6 = 11;
+const int d7 = 12;
+
+// Strings for user prompts
+String str1 = "Enter 1st number: ";
+String str2 = "Choose operation (+,-,*,/): ";
+String str3 = "Enter 2nd number: ";
+
+// Variables for user input and results
+float num1 = 0;
+float num2 = 0;
+char operation;
+
+// LCD object
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+void setup() {
+  lcd.begin(16, 2);
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Prompt user to enter the first number
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print(str1);
+  Serial.println(str1);
+  while (Serial.available() == 0) {}
+  num1 = Serial.parseFloat();
+
+  // Prompt user to choose the operation
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print(str2);
+  Serial.println(str2);
+  while (Serial.available() == 0) {}
+  operation = Serial.read();
+
+  // Prompt user to enter the second number
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print(str3);
+  Serial.println(str3);
+  while (Serial.available() == 0) {}
+  num2 = Serial.parseFloat();
+
+  // Perform the selected operation and display the result
+  float result = 0;
+  switch (operation) {
+    case '+':
+      result = num1 + num2;
+      break;
+    case '-':
+      result = num1 - num2;
+      break;
+    case '*':
+      result = num1 * num2;
+      break;
+    case '/':
+      // Check for division by zero
+      if (num2 != 0) {
+        result = num1 / num2;
+      } else {
+        lcd.clear();
+        lcd.print("Error: Division by zero");
+        delay(2000); // Wait for 2 seconds to display the error message
+        break;
+      }
+    default:
+      lcd.clear();
+      lcd.print("Error: Invalid operation");
+      delay(2000); // Wait for 2 seconds to display the error message
+      break;
+  }
+
+  // Display the result on the LCD
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Result: ");
+  lcd.print(result);
+  delay(2000); // Wait for 2 seconds before prompting for the next calculation
+}
+
+
+
+
+Explanation of improvements:
+
+1.String Prompts: Updated the string prompts to be more concise and clear.
+
+2.Error Handling: Added error handling for division by zero and invalid operations. If division by zero occurs, it displays an error message on the LCD and waits for 2 seconds before prompting for the next calculation. Similarly, for an invalid operation, it displays an error message and waits for 2 seconds.
+
+3. Switch Statement: Replaced multiple if statements with a switch statement for better readability and efficiency.
+
+3.Variable Scope: Moved the declaration of the result variable inside the loop to limit its scope to the loop, as it's not needed outside of it.
+
+4.LCD Clearing: Cleared the LCD before displaying each prompt or result to ensure a clean display.
+
+5.Delay: Added a delay after displaying the result or an error message to give the user time to read before proceeding to the next calculation.

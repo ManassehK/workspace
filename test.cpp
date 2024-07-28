@@ -21,11 +21,37 @@ public:
     //friend function
     friend ostream& operator<< (ostream&, const Array&);
 
-    class xBoundary {}; //exception class defined
-    class xTooBig {};
-    class xTooSmall{};
-    class xZero {};
-    class xNegative {};
+     //exception class defined
+    class xBoundary {};
+    class xSize
+    {
+        public:
+        xSize(int size):itsSize(size){}
+        ~xSize(){}
+        int GetSize(){ return itsSize; }
+        private:
+            int itsSize;
+    };
+    class xTooBig : public xSize
+    {
+        public:
+        xTooBig(int size):xSize(size){}
+    };
+    class xTooSmall : public xSize
+    {
+        public:
+        xTooSmall(int size):xSize(size){}
+    };
+    class xZero : public xTooSmall 
+    {
+        public:
+        xZero(int size):xTooSmall(size){}
+    };
+    class xNegative : public xSize 
+    {
+        public:
+        xNegative(int size):xSize(size){}
+    };
 private:
     int *pType;
     int itsSize;   
@@ -35,13 +61,13 @@ Array::Array(int size):
     itsSize(size)
 {
     if (size == 0)
-        throw xZero();
- if (size < 10)
-        throw xTooSmall();
-if (size > 30000)
-        throw xTooBig();
+        throw xZero(size);
+ if (size > 30000)
+        throw xTooBig(size);
 if (size < 1)
-        throw xNegative();
+        throw xNegative(size);
+if (size < 10)
+        throw xTooSmall(size);
     pType = new int[size];
     for (int i = 0; i < size; i++)
         pType[i] = 0; 
@@ -98,7 +124,7 @@ ostream& operator<< (ostream& output, const Array& theArray)
 
 int main()
 {   
-    Array intArray(22);
+    Array intArray(9);
     try
     {
         for (int j=0;j<100; j++)
@@ -111,6 +137,11 @@ int main()
     {
         cout<<" Unable to process your input! "<<endl;
     }
+    catch (Array::xZero theException)
+    {
+        cout<<"You asked for an array of zero objects!";
+        cout<<" "<<endl;
+    }
     catch (Array::xTooBig)
     {
         cout<<"This array is too big..."<<endl;
@@ -118,11 +149,6 @@ int main()
     catch (Array::xTooSmall)
     {
         cout<<"This array is too small..."<<endl;
-    }
-    catch (Array::xZero)
-    {
-        cout<<"You asked for an array";
-        cout<<" of zero objects!"<<endl;
     }
     catch(...)
     {

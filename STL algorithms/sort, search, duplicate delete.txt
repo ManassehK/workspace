@@ -1,0 +1,81 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <string>
+
+
+int main()
+{
+    using namespace std;
+    typedef vector <string> VECTOR_STRING;
+
+    VECTOR_STRING vecNames;
+
+    vecNames.push_back ("John Doe");
+    vecNames.push_back ("Jack Nicholson");
+    vecNames.push_back ("Manasseh Moola");
+    vecNames.push_back ("Anna Hoover");
+    vecNames.push_back ("anna Hoover");
+    vecNames.push_back ("John Doe");
+    vecNames.push_back ("Bwalwa Chanda");
+     vecNames.push_back ("Sammy");
+
+    cout<<" The initial contents of the vector are: "<<endl;
+    for (size_t nItem = 0; nItem < vecNames.size(); ++nItem)
+    {
+        cout << "Name ["<<nItem<< "] = \"";
+        cout <<vecNames[nItem]<<"\""<<endl;
+    }
+    cout << endl;
+
+    //sorting the names usin std::sort
+    sort (vecNames.begin(), vecNames.end());
+    cout << "The sorted vector contains names in the order: "<<endl;
+    for (size_t nItem = 0; nItem < vecNames.size(); ++nItem)
+    {
+        cout << "Name ["<<nItem<< "] = \"";
+        cout <<vecNames[nItem]<<"\""<<endl;
+    }
+    cout << endl;
+
+cout << "searching for John Doe: "<< endl;
+bool bElement = binary_search (vecNames.begin(), vecNames.end(), "john Doe");
+
+if (bElement)
+    cout << "Result was found in the vector! "<<endl;
+else
+    cout << " Element not foud "<<endl;
+
+cout << endl;
+
+VECTOR_STRING :: iterator iNewEnd;
+
+//Erase adjacent duplicates
+iNewEnd = unique(vecNames.begin(), vecNames.end());
+vecNames.erase (iNewEnd, vecNames.end());
+
+cout << " the contents of the vector ater using 'unique': "<<endl;
+ for (size_t nItem = 0; nItem < vecNames.size(); ++nItem)
+    {
+        cout << "Name ["<<nItem<< "] = \"";
+        cout <<vecNames[nItem]<<"\""<<endl;
+    }
+    cout << endl;
+    return 0;
+}
+
+
+Search algorithms such as binary_search are applicable only to sorted containers; use
+of this algorithm on an unsorted vector could have undesirable consequences. Hence, the
+code above first sorts the sample vector, vecNames, before using
+binary_search to find “John Doe” in it. Similarly, std::unique is used to delete the
+second occurrence of an adjacent duplicate. In most scenarios, this
+algorithm is also most effective only after the collection has been sorted.
+
+
+The usage of stable_sort is the same as that of sort, which
+you saw earlier. stable_sort ensures that the relative order of
+the sorted elements is maintained. Maintaining relative order
+comes at the cost of performance—a factor that needs to be kept
+in mind, especially if the relative ordering of elements is not
+essential.

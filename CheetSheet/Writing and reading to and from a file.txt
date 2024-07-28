@@ -1,0 +1,34 @@
+#include <iostream>
+#include <fstream>
+#include <string.h>
+
+using namespace std;
+
+int main ()
+{
+char fileName[80];
+char buffer[255]; //for user input
+cout<<"Enter file name: ";
+cin>>fileName;
+
+ofstream fout (fileName); //open for writing
+fout<<"This line written directly to the file...\n";
+cout << "Enter text for the file: ";
+cin.ignore(1, '\n');
+cin.getline(buffer,255);
+fout<<buffer<<"\n";
+fout.close();
+
+ifstream fin(fileName); //reopen for reading
+cout << "Here's the contents of the file:\n";
+char ch;
+
+while (fin.get(ch))
+    cout<<ch;
+
+cout<<"\n***End of file contents.***\n";
+
+fin.close();
+
+return 0;
+}

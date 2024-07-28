@@ -1,0 +1,27 @@
+float V2;
+float ReadVal;
+int delayT=1000;
+int readPin=A2;
+String Error = "Low voltage!";
+
+void setup() {
+  // put your setup code here, to run once: 
+Serial.begin(9600);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+ReadVal=analogRead(readPin);
+V2=(5./1023.)*ReadVal;
+//a potentiometer was used to control the voltage
+if (V2<3)
+{
+  Serial.println(Error);
+  delay(delayT);
+  }
+  else
+  {
+    Serial.println("Success!");
+    delay(delayT);
+    }
+}

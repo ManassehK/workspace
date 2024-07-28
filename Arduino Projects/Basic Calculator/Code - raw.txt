@@ -1,0 +1,139 @@
+#include <LiquidCrystal.h>
+int rs=7;
+int en=8;
+int d4=9;
+int d5=10;
+int d6=11;
+int d7=12;
+
+String str1 = "Enter 1st number: ";
+String str2 = "Chose operation: ";
+String str3 = "Enter 2nd Number: ";
+char operation;
+
+float num1=0;
+float num2=0;
+float Sum;
+float Product;
+float Difference;
+float Quotient;
+
+float Addition(float, float);
+float Subtraction(float, float);
+float Multipliacation(float, float);
+float Division(float, float); 
+
+LiquidCrystal lcd(rs,en,d4,d5,d6,d7); 
+int dt = 1000;
+
+void setup(){
+lcd.begin(16,2);
+Serial.begin(9600);
+}
+
+void loop(){
+
+lcd.setCursor(0,0);
+lcd.print(str1);
+Serial.println(str1);
+while (Serial.available()==0){}
+num1 =Serial.parseFloat();
+if (num1 != 0)
+   {lcd.clear();}
+
+lcd.setCursor(0,0);
+lcd.print(str2);
+Serial.println(str2);
+while (Serial.available()==0){}
+operation =Serial.read();
+if (operation != 0)
+   {lcd.clear();}
+
+lcd.setCursor(0,0);
+lcd.print(str3);
+Serial.println(str3);
+while (Serial.available()==0){}
+num2 =Serial.parseFloat();
+if (num2 != 0)
+   {lcd.clear();}
+
+if (operation == '+')
+  {
+  Sum = Addition(num1,num2);
+  lcd.setCursor(0,1);
+  lcd.print(num1);
+  lcd.print("+");
+  lcd.print(num2);
+  lcd.print("=");
+  lcd.print(Sum);
+  while(Sum !=0){
+    lcd.setCursor(0,0);
+    lcd.print("Answer: ");}
+  }
+
+if (operation == '*')
+  {
+  Product = Multiplication(num1,num2);
+  lcd.setCursor(0,1);
+  lcd.print(num1);
+  lcd.print("X");
+  lcd.print(num2);
+  lcd.print("=");
+  lcd.print(Product);
+  while(Product !=0){
+    lcd.setCursor(0,0);
+    lcd.print("Answer: ");}
+  }
+
+if (operation == '-')
+  {
+  Difference = Subtraction(num1,num2);
+  lcd.setCursor(0,1);
+  lcd.print(num1);
+  lcd.print("-");
+  lcd.print(num2);
+  lcd.print("=");
+  lcd.print(Difference);
+  while(Difference !=0){
+    lcd.setCursor(0,0);
+    lcd.print("Answer: ");}
+  }
+
+if (operation == '/')
+  {
+  Quotient = Division(num1,num2);
+  lcd.setCursor(0,1);
+  lcd.print(num1);
+  lcd.print("/");
+  lcd.print(num2);
+  lcd.print("=");
+  lcd.print(Quotient);
+  while (Quotient !=0){
+    lcd.setCursor(0,0);
+    lcd.print("Answer: ");}
+  }
+  
+}
+
+
+//Functions
+float Addition(float numA, float numB)
+{
+  float answer = numA + numB;
+  return answer;
+}
+float Multiplication(float numA, float numB)
+{
+  float answer = numA*numB;
+  return answer;
+}
+float Subtraction(float numA, float numB)
+{
+  float answer = numA - numB;
+  return answer;
+}
+float Division(float numA, float numB)
+{
+  float answer = numA/numB;
+  return answer;
+}
