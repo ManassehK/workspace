@@ -19,13 +19,68 @@ public:
 
 
     //friend function
-    friend ostream& operator<< (ostream&, const Array&);
+    friend ostream& operator<<
+    (ostream&, const Array&);
 
-    class xBoundary {}; //exception class defined
-    class xTooBig {};
-    class xTooSmall{};
-    class xZero {};
-    class xNegative {};
+     //exception class defined
+    class xBoundary {};
+    class xSize
+    {
+        public:
+        xSize(int size):itsSize(size){}
+        ~xSize(){}
+        virtual int GetSize(){ return itsSize; }
+        virtual void PrintError()
+        {
+            cout <<"Size error. Received: ";
+            cout<<itsSize<<endl;
+        }
+        protected:
+            int itsSize;
+    };
+
+    class xTooBig : public xSize
+    {
+        public:
+        xTooBig(int size):xSize(size){}
+        virtual void PrintError()
+        {
+            cout <<"Too big! Received: ";
+            cout <<xSize::itsSize<<endl;
+        }
+    };
+    class xTooSmall : public xSize
+    {
+        public:
+        xTooSmall(int size):xSize(size){}
+         virtual void PrintError()
+        {
+            cout <<"Too small! Received: ";
+            cout <<xSize::itsSize<<endl;
+        }
+    };
+
+    class xZero : public xTooSmall 
+    {
+        public:
+        xZero(int size):xTooSmall(size){}
+         virtual void PrintError()
+        {
+            cout <<"Zero!! Received: ";
+            cout <<xSize::itsSize<<endl;
+        }
+    };
+
+    class xNegative : public xSize 
+    {
+        public:
+        xNegative(int size):xSize(size){}
+         virtual void PrintError()
+        {
+            cout <<"Negative!! Received: ";
+            cout <<xSize::itsSize<<endl;
+        }
+    };
 private:
     int *pType;
     int itsSize;   
@@ -35,13 +90,13 @@ Array::Array(int size):
     itsSize(size)
 {
     if (size == 0)
-        throw xZero();
- if (size < 10)
-        throw xTooSmall();
-if (size > 30000)
-        throw xTooBig();
+        throw xZero(size);
+ if (size > 30000)
+        throw xTooBig(size);
 if (size < 1)
-        throw xNegative();
+        throw xNegative(size);
+if (size < 10)
+        throw xTooSmall(size);
     pType = new int[size];
     for (int i = 0; i < size; i++)
         pType[i] = 0; 
@@ -111,22 +166,13 @@ int main()
     {
         cout<<" Unable to process your input! "<<endl;
     }
-    catch (Array::xTooBig)
+    catch (Array::xSize& theException)
     {
-        cout<<"This array is too big..."<<endl;
-    }
-    catch (Array::xTooSmall)
-    {
-        cout<<"This array is too small..."<<endl;
-    }
-    catch (Array::xZero)
-    {
-        cout<<"You asked for an array";
-        cout<<" of zero objects!"<<endl;
+     theException.PrintError();                    
     }
     catch(...)
     {
-        cout<<"Something went wrong!"<<endl;
+        cout<<"Something went wrong, but I've no idea what!\n"<<endl;
     }
     cout<<"Done. "<<endl;
      return 0;

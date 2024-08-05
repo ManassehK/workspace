@@ -19,7 +19,8 @@ public:
 
 
     //friend function
-    friend ostream& operator<< (ostream&, const Array&);
+    friend ostream& operator<<
+    (ostream&, const Array&);
 
      //exception class defined
     class xBoundary {};
@@ -28,29 +29,57 @@ public:
         public:
         xSize(int size):itsSize(size){}
         ~xSize(){}
-        int GetSize(){ return itsSize; }
-        private:
+        virtual int GetSize(){ return itsSize; }
+        virtual void PrintError()
+        {
+            cout <<"Size error. Received: ";
+            cout<<itsSize<<endl;
+        }
+        protected:
             int itsSize;
     };
+
     class xTooBig : public xSize
     {
         public:
         xTooBig(int size):xSize(size){}
+        virtual void PrintError()
+        {
+            cout <<"Too big! Received: ";
+            cout <<xSize::itsSize<<endl;
+        }
     };
     class xTooSmall : public xSize
     {
         public:
         xTooSmall(int size):xSize(size){}
+         virtual void PrintError()
+        {
+            cout <<"Too small! Received: ";
+            cout <<xSize::itsSize<<endl;
+        }
     };
+
     class xZero : public xTooSmall 
     {
         public:
         xZero(int size):xTooSmall(size){}
+         virtual void PrintError()
+        {
+            cout <<"Zero!! Received: ";
+            cout <<xSize::itsSize<<endl;
+        }
     };
+
     class xNegative : public xSize 
     {
         public:
         xNegative(int size):xSize(size){}
+         virtual void PrintError()
+        {
+            cout <<"Negative!! Received: ";
+            cout <<xSize::itsSize<<endl;
+        }
     };
 private:
     int *pType;
@@ -124,7 +153,7 @@ ostream& operator<< (ostream& output, const Array& theArray)
 
 int main()
 {   
-    Array intArray(9);
+    Array intArray(20);
     try
     {
         for (int j=0;j<100; j++)
@@ -137,22 +166,13 @@ int main()
     {
         cout<<" Unable to process your input! "<<endl;
     }
-    catch (Array::xZero theException)
+    catch (Array::xSize& theException)
     {
-        cout<<"You asked for an array of zero objects!";
-        cout<<" "<<endl;
-    }
-    catch (Array::xTooBig)
-    {
-        cout<<"This array is too big..."<<endl;
-    }
-    catch (Array::xTooSmall)
-    {
-        cout<<"This array is too small..."<<endl;
+     theException.PrintError();                    
     }
     catch(...)
     {
-        cout<<"Something went wrong!"<<endl;
+        cout<<"Something went wrong, but I've no idea what!\n"<<endl;
     }
     cout<<"Done. "<<endl;
      return 0;
